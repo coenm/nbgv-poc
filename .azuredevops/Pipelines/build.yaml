@@ -54,7 +54,7 @@ stages:
           name: SetPipelineVariables
 
         - task: UseDotNet@2
-          displayName: "Use dotnet sdk"
+          displayName: "Use specified dotnet sdk version"
           inputs:
             version: $(DOTNETSDKVERSION)
             includePreviewVersions: false
@@ -165,41 +165,41 @@ stages:
         #     codeCoverageTool: Cobertura
         #     summaryFileLocation: '$(Agent.TempDirectory)/Cobertura.xml'
 
-        - task: DotNetCoreCLI@2
-          displayName: Dotnet Publish RepoM
-          inputs:
-            command: publish
-            arguments: "--configuration $(buildConfiguration) --output _output/Win/Assemblies"
-            projects: "**/RepoM.App.csproj"
-            publishWebProjects: false
-            modifyOutputPath: false
-            zipAfterPublish: false
+        # - task: DotNetCoreCLI@2
+        #   displayName: Dotnet Publish RepoM
+        #   inputs:
+        #     command: publish
+        #     arguments: "--configuration $(buildConfiguration) --output _output/Win/Assemblies"
+        #     projects: "**/RepoM.App.csproj"
+        #     publishWebProjects: false
+        #     modifyOutputPath: false
+        #     zipAfterPublish: false
 
-        - task: DeleteFiles@1
-          displayName: Remove unneeded files
-          inputs:
-            contents: |
-              _output/**/*.xlm
-              _output/**/*.config
-              _output/**/*.pdb
-              _output/Win/Assemblies/runtimes/!(win*)/**/*.*
-              _output/Win/Assemblies/!(runtimes)/*.resources.dll
+        # - task: DeleteFiles@1
+        #   displayName: Remove unneeded files
+        #   inputs:
+        #     contents: |
+        #       _output/**/*.xlm
+        #       _output/**/*.config
+        #       _output/**/*.pdb
+        #       _output/Win/Assemblies/runtimes/!(win*)/**/*.*
+        #       _output/Win/Assemblies/!(runtimes)/*.resources.dll
 
-        - pwsh: |
-            Get-ChildItem -Path "_output\Win\Assemblies" -Recurse | Where-Object { $_.PSIsContainer -and @(Get-ChildItem -LiteralPath $_.FullName -Recurse -Force).Count -eq 0 } | Remove-Item -Recurse
-            Get-ChildItem -Path "_output\Win\Assemblies\runtimes" -Recurse | Where-Object { $_.PSIsContainer -and @(Get-ChildItem -LiteralPath $_.FullName -Recurse -Force).Count -eq 0 } | Remove-Item -Recurse
-          displayName: Remove empty directories
+        # - pwsh: |
+        #     Get-ChildItem -Path "_output\Win\Assemblies" -Recurse | Where-Object { $_.PSIsContainer -and @(Get-ChildItem -LiteralPath $_.FullName -Recurse -Force).Count -eq 0 } | Remove-Item -Recurse
+        #     Get-ChildItem -Path "_output\Win\Assemblies\runtimes" -Recurse | Where-Object { $_.PSIsContainer -and @(Get-ChildItem -LiteralPath $_.FullName -Recurse -Force).Count -eq 0 } | Remove-Item -Recurse
+        #   displayName: Remove empty directories
 
-        - pwsh: |
-            nuget install NSIS -OutputDirectory ./packages
-            makensis.exe /DPRODUCT_VERSION=$Env:NBGV_SEMVER2 _setup/RepoM.nsi 
-          displayName: Create installer
+        # - pwsh: |
+        #     nuget install NSIS -OutputDirectory ./packages
+        #     makensis.exe /DPRODUCT_VERSION=$Env:NBGV_SEMVER2 _setup/RepoM.nsi 
+        #   displayName: Create installer
           
-        - task: DeleteFiles@1
-          displayName: Remove binaries
-          inputs:
-            contents: |
-              _output/win
+        # - task: DeleteFiles@1
+        #   displayName: Remove binaries
+        #   inputs:
+        #     contents: |
+        #       _output/win
 
         - task: PublishBuildArtifacts@1
           displayName: Publish artifact
