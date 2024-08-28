@@ -44,7 +44,7 @@ stages:
         - checkout: self
           fetchDepth: 0 # avoid shallow clone so nbgv can do its work.
           clean: true
-          
+
         - script: git submodule update --init --recursive
           displayName: Update git submodules
 
@@ -54,9 +54,9 @@ stages:
           name: SetPipelineVariables
 
         - task: UseDotNet@2
-          displayName: "Use dotnet sdk 8.0.401"
+          displayName: "Use dotnet sdk $(DOTNETSDKVERSION)"
           inputs:
-            version: 8.0.401
+            version: $(DOTNETSDKVERSION)
             includePreviewVersions: false
 
         - script: dotnet --info
