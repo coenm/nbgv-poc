@@ -54,10 +54,11 @@ stages:
           name: SetPipelineVariables
 
         - task: UseDotNet@2
-          displayName: "Use dotnet sdk {{ $DOTNETSDKVERSION }}"
+          displayName: "Use dotnet sdk"
           inputs:
             version: $(DOTNETSDKVERSION)
             includePreviewVersions: false
+            condition: and(succeeded(), ne(variables['DOTNETSDKVERSION'], ''))
 
         - script: dotnet --info
           displayName: Show dotnet SDK info
