@@ -165,15 +165,15 @@ stages:
         #     codeCoverageTool: Cobertura
         #     summaryFileLocation: '$(Agent.TempDirectory)/Cobertura.xml'
 
-        # - task: DotNetCoreCLI@2
-        #   displayName: Dotnet Publish RepoM
-        #   inputs:
-        #     command: publish
-        #     arguments: "--configuration $(buildConfiguration) --output _output/Win/Assemblies"
-        #     projects: "**/RepoM.App.csproj"
-        #     publishWebProjects: false
-        #     modifyOutputPath: false
-        #     zipAfterPublish: false
+        - task: DotNetCoreCLI@2
+          displayName: Dotnet Publish
+          inputs:
+            command: publish
+            arguments: "--configuration $(buildConfiguration) --output _output"
+            projects: "**/*.csproj"
+            publishWebProjects: false
+            modifyOutputPath: false
+            zipAfterPublish: false
 
         # - task: DeleteFiles@1
         #   displayName: Remove unneeded files
