@@ -54,7 +54,7 @@ stages:
           name: SetPipelineVariables
 
         - task: UseDotNet@2
-          displayName: "Use dotnet sdk $(DOTNETSDKVERSION)"
+          displayName: "Use dotnet sdk ${{ DOTNETSDKVERSION }} - ${{ variables['DOTNETSDKVERSION']' }}"
           inputs:
             version: $(DOTNETSDKVERSION)
             includePreviewVersions: false
@@ -109,11 +109,11 @@ stages:
         #   displayName: Re-generate markdown without links
         #   name: mdsnippets
 
-        - task: DotNetCoreCLI@2
-          displayName: DotNet Restore
-          inputs:
-            command: restore
-            projects: '**/*.csproj'
+        # - task: DotNetCoreCLI@2
+        #   displayName: DotNet Restore
+        #   inputs:
+        #     command: restore
+        #     projects: '**/*.csproj'
 
         # - task: SonarCloudPrepare@2
         #   displayName: Prepare analysis on SonarCloud
