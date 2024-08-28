@@ -41,9 +41,17 @@ stages:
             value: 'DebuggerNonUserCodeAttribute%2cExcludeFromCodeCoverageAttribute%2cGeneratedCodeAttribute%2cCompilerGeneratedAttribute'
  
         steps:
-
+        - checkout: self
+          fetchDepth: 0 # avoid shallow clone so nbgv can do its work.
+          clean: true
+          
         - script: git submodule update --init --recursive
           displayName: Update git submodules
+
+        - powershell: .azuredevops/Variables/_pipelines.ps1
+          failOnStderr: true
+          displayName: ⚙ Set pipeline variables based on source
+          name: SetPipelineVariables
 
         - task: UseDotNet@2
           displayName: "Use dotnet sdk 8.0.401"
