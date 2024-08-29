@@ -201,6 +201,19 @@ stages:
         #     contents: |
         #       _output/win
 
+
+        - task: CopyFiles@2
+          inputs:
+            contents: '*.toml'
+            targetFolder: _output_publisher
+
+        - task: PublishBuildArtifacts@1
+          displayName: Publish artifact
+          inputs:
+            # PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+            PathtoPublish: "_output_publisher"
+            ArtifactName: publisher
+      
         - task: PublishBuildArtifacts@1
           displayName: Publish artifact
           inputs:

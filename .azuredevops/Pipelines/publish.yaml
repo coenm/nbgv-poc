@@ -44,6 +44,10 @@ jobs:
     artifact: installer
     displayName: 🔻 Download deployables-Windows artifact
     patterns: 'installer/*'
+  - download: CI
+    artifact: publisher
+    displayName: 🔻 Download publisher
+    patterns: 'publisher/*'
   - task: GitHubRelease@1
     displayName: 📢 GitHub release (create)
     inputs:
@@ -68,7 +72,7 @@ jobs:
      Start-Sleep -Seconds 60  
     displayName: 'Delay for 1 minutes'
   - powershell: |
-      dotnet-releaser changelog --update --github-token $(GITHUB_TOKEN) dotnet-releaser.toml $(resources.pipeline.CI.runName)
+      dotnet-releaser changelog --update --github-token $(GITHUB_TOKEN) $(Pipeline.Workspace)/CI/publisher/dotnet-releaser.toml $(resources.pipeline.CI.runName)
     displayName: ⚙ Release update text
       
 
