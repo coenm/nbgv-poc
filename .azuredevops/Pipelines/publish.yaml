@@ -56,9 +56,9 @@ jobs:
           { "label" : "bug", "displayName" : "Fixes", "state" : "closed" },
           { "label" : "enhancement", "displayName": "Enhancements", "state" : "closed" }
         ]
-  - task: Delay@1
-    inputs:
-      delayForMinutes: '5'
+  - powershell: |
+     Start-Sleep -Seconds 300  
+    displayName: 'Delay for 5 minutes'
   - powershell: |
       dotnet tool install --global dotnet-releaser
       dotnet-releaser run--github-token "$(GITHUB_TOKEN)" src/dotnet-releaser.toml $(resources.pipeline.CI.runName)
