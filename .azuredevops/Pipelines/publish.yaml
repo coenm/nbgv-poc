@@ -9,8 +9,8 @@ resources:
       tags:
       - auto-release
 
-# variables:
-# - group: Publishing secrets
+variables:
+- group: Publishing secrets
 
 
 jobs:
@@ -56,8 +56,35 @@ jobs:
           { "label" : "bug", "displayName" : "Fixes", "state" : "closed" },
           { "label" : "enhancement", "displayName": "Enhancements", "state" : "closed" }
         ]
+  - task: Delay@1
+    inputs:
+      delayForMinutes: '5'
+  - powershell: |
+      dotnet tool install --global dotnet-releaser
+      dotnet-releaser run--github-token "$(GITHUB_TOKEN)" src/dotnet-releaser.toml $(resources.pipeline.CI.runName)
+    displayName: ⚙ Release update text
+      
 
-
+  # - task: GitHubRelease@1
+  #   displayName: 📢 GitHub release (create)
+  #   inputs:
+  #     gitHubConnection: github_coenm_pan
+  #     repositoryName: $(Build.Repository.Name)
+  #     target: $(resources.pipeline.CI.sourceCommit)
+  #     tagSource: userSpecifiedTag
+  #     tag: v$(resources.pipeline.CI.runName)
+  #     title: v$(resources.pipeline.CI.runName)
+  #     isDraft: true # After running this step, visit the new draft release, edit, and publish.
+  #     isPreRelease: $(IsPrerelease)
+  #     assets: $(Pipeline.Workspace)/CI/installer/*.dll
+  #     changeLogCompareToRelease: lastNonDraftRelease
+  #     changeLogType: issueBased
+  #     changeLogLabels: |
+  #       [
+  #         { "label" : "breaking change", "displayName" : "Breaking changes", "state" : "closed" },
+  #         { "label" : "bug", "displayName" : "Fixes", "state" : "closed" },
+  #         { "label" : "enhancement", "displayName": "Enhancements", "state" : "closed" }
+  #       ]
 
 
 
