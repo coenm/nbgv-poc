@@ -65,8 +65,8 @@ jobs:
           { "label" : "enhancement", "displayName": "Enhancements", "state" : "closed" }
         ]
   - powershell: |
-     Start-Sleep -Seconds 300  
-    displayName: 'Delay for 5 minutes'
+     Start-Sleep -Seconds 60  
+    displayName: 'Delay for 1 minutes'
   - powershell: |
       dotnet-releaser run--github-token "$(GITHUB_TOKEN)" src/dotnet-releaser.toml $(resources.pipeline.CI.runName)
     displayName: ⚙ Release update text
