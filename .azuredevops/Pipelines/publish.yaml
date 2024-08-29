@@ -68,7 +68,7 @@ jobs:
      Start-Sleep -Seconds 60  
     displayName: 'Delay for 1 minutes'
   - powershell: |
-      dotnet-releaser changelog --update --github-token $(GITHUB_TOKEN) src/dotnet-releaser.toml $(resources.pipeline.CI.runName)
+      dotnet-releaser changelog --update --github-token $(GITHUB_TOKEN) dotnet-releaser.toml $(resources.pipeline.CI.runName)
     displayName: ⚙ Release update text
       
 
