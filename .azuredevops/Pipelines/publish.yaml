@@ -64,9 +64,9 @@ stages:
       inputs:
         packageType: sdk
         version: 7.x
-    - powershell: |
-        dotnet tool install --global dotnet-releaser
-      displayName: Install releaser
+    # - powershell: |
+    #     dotnet tool install --global dotnet-releaser
+    #   displayName: Install releaser
     - download: CI
       artifact: installer
       displayName: 🔻 Download deployables-Windows artifact
@@ -97,8 +97,9 @@ stages:
           ]
 
     - powershell: |
+        dotnet tool install --global dotnet-releaser
         dotnet-releaser changelog --update --github-token $(GITHUB_TOKEN) $(Pipeline.Workspace)/CI/publisher/dotnet-releaser.toml $(resources.pipeline.CI.runName)
-      displayName: ⚙ Release update text
+      displayName: ⚙ Dotnet releaser
       
 
   # - task: GitHubRelease@1
