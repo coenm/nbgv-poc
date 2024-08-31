@@ -6,9 +6,6 @@ resources:
   - pipeline: CI
     source: nbgv-poc.Build
     trigger: true
-    # trigger:
-    #   tags:
-    #   - auto-release
 
 variables:
 - group: Publishing secrets
@@ -44,10 +41,10 @@ stages:
         onTimeout: 'reject'
 
 - stage: GithubRelease
-  displayName: GitHub Release
+  displayName: Github Release
   jobs:
   - job: release
-    displayName: Github release
+    displayName: Github Release
     pool:
       vmImage: ubuntu-latest
     steps:
@@ -59,11 +56,6 @@ stages:
           Write-Host "##vso[task.setvariable variable=IsPrerelease]false"
         }
       displayName: ⚙ Set up pipeline
-    # - task: UseDotNet@2
-    #   displayName: ⚙ Install .NET SDK 7.x
-    #   inputs:
-    #     packageType: sdk
-    #     version: 7.x
     - download: CI
       artifact: installer
       displayName: 🔻 Download deployables-Windows artifact
@@ -98,90 +90,3 @@ stages:
         dotnet-releaser changelog --update --github-token $(GITHUB_TOKEN) $(Pipeline.Workspace)/CI/publisher/dotnet-releaser.toml $(resources.pipeline.CI.runName)
       displayName: 📢 Update GitHub release using Releaser
       
-
-  # - task: GitHubRelease@1
-  #   displayName: 📢 GitHub release (create)
-  #   inputs:
-  #     gitHubConnection: github_coenm_pan
-  #     repositoryName: $(Build.Repository.Name)
-  #     target: $(resources.pipeline.CI.sourceCommit)
-  #     tagSource: userSpecifiedTag
-  #     tag: v$(resources.pipeline.CI.runName)
-  #     title: v$(resources.pipeline.CI.runName)
-  #     isDraft: true # After running this step, visit the new draft release, edit, and publish.
-  #     isPreRelease: $(IsPrerelease)
-  #     assets: $(Pipeline.Workspace)/CI/installer/*.dll
-  #     changeLogCompareToRelease: lastNonDraftRelease
-  #     changeLogType: issueBased
-  #     changeLogLabels: |
-  #       [
-  #         { "label" : "breaking change", "displayName" : "Breaking changes", "state" : "closed" },
-  #         { "label" : "bug", "displayName" : "Fixes", "state" : "closed" },
-  #         { "label" : "enhancement", "displayName": "Enhancements", "state" : "closed" }
-  #       ]
-
-
-
-
-
-# stages:
-# - stage: GitHubRelease
-#   displayName: GitHub Release
-#   jobs:
-#   - deployment: create
-#     pool:
-#       vmImage: ubuntu-latest
-#     environment: No-Approval
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - download: none
-#           - powershell: |
-#               Write-Host "##vso[build.updatebuildnumber]$(resources.pipeline.CI.runName)"
-#             displayName: Set pipeline name
-#           - task: GitHubRelease@1
-#             displayName: GitHub release (create)
-#             inputs:
-#               gitHubConnection: github_coenm_pan
-#               repositoryName: $(Build.Repository.Name)
-#               target: $(resources.pipeline.CI.sourceCommit)
-#               tagSource: userSpecifiedTag
-#               tag: v$(resources.pipeline.CI.runName)
-#               title: v$(resources.pipeline.CI.runName)
-#               isDraft: true
-#               changeLogCompareToRelease: lastNonDraftRelease
-#               changeLogType: issueBased
-#               changeLogLabels: |
-#                 [
-#                   { "label" : "bug", "displayName" : "Fixes", "state" : "closed" },
-#                   { "label" : "enhancement", "displayName": "Enhancements", "state" : "closed" }
-#                 ]
-
-# - stage: nuget_org
-#   displayName: nuget.org
-#   dependsOn: GitHubRelease
-#   jobs:
-#   - deployment: push
-#     pool:
-#       vmImage: ubuntu-latest
-#     environment: No-Approval
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - download: CI
-#             artifact: packages
-#             displayName: Download nuget packages artifact
-#             patterns: 'packages/*'
-#           - task: NuGetToolInstaller@1
-#             displayName: Use NuGet 5.x
-#             inputs:
-#               versionSpec: 5.x
-#           - task: NuGetCommand@2
-#             displayName: NuGet push nupkg
-#             inputs:
-#               command: push
-#               packagesToPush: '$(Pipeline.Workspace)/CI/packages/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg'
-#               nuGetFeedType: external
-#               publishFeedCredentials: nuget.org     
