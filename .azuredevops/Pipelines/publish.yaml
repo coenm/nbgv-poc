@@ -14,6 +14,19 @@ variables:
 - group: Publishing secrets
 
 stages:
+- stage: UpdateBuildNumber
+  displayName: Set build number
+  jobs:
+  - job: SetBuildNumber
+    displayName: Set build number
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: none
+    - powershell: |
+        Write-Host "##vso[build.updatebuildnumber]$(resources.pipeline.CI.runName)"
+      displayName: ⚙ Set up pipeline
+
 - stage: "Manual_Validation"
   displayName: "Manual Validation"
   jobs:
@@ -22,9 +35,6 @@ stages:
     timeoutInMinutes: 1441
     displayName: Wait for validation
     steps:
-    - powershell: |
-        Write-Host "##vso[build.updatebuildnumber]$(resources.pipeline.CI.runName)"
-      displayName: ⚙ Set up pipeline
     - task: ManualValidation@0
       displayName: 'Manual validation'
       timeoutInMinutes: 1440
@@ -43,7 +53,6 @@ stages:
     steps:
     - checkout: none
     - powershell: |
-        Write-Host "##vso[build.updatebuildnumber]$(resources.pipeline.CI.runName)"
         if ('$(resources.pipeline.CI.runName)'.Contains('-')) {
           Write-Host "##vso[task.setvariable variable=IsPrerelease]true"
         } else {
