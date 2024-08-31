@@ -28,7 +28,8 @@ stages:
         instructions: 'Please approve or reject the deployment.'
         onTimeout: 'reject'
 
-- stage: Github release
+- stage: GithubRelease
+  displayName: GitHub Release
   jobs:
   - job: release
     pool:
