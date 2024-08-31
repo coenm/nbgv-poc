@@ -30,9 +30,6 @@ stages:
         instructions: 'Please approve or reject the deployment.'
         onTimeout: 'reject'
 
-# - stage: GithubRelease
-#   displayName: GitHub Release
-#   jobs:
   - job: release
     displayName: Github release
     pool:
@@ -88,9 +85,7 @@ stages:
             { "label" : "bug", "displayName" : "Fixes", "state" : "closed" },
             { "label" : "enhancement", "displayName": "Enhancements", "state" : "closed" }
           ]
-    - powershell: |
-       Start-Sleep -Seconds 60  
-      displayName: 'Delay for 1 minutes'
+
     - powershell: |
         dotnet-releaser changelog --update --github-token $(GITHUB_TOKEN) $(Pipeline.Workspace)/CI/publisher/dotnet-releaser.toml $(resources.pipeline.CI.runName)
       displayName: ⚙ Release update text
