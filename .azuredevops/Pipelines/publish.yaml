@@ -14,10 +14,11 @@ variables:
 
 stages:
 - stage: "Manual_Validation"
+  displayName: "Manual Validation"
   jobs:
   - job: WaitForValidation
     pool: server
-    timeoutInMinutes: 1440
+    timeoutInMinutes: 1441
     displayName: Wait for validation
     steps:
     - task: ManualValidation@0
@@ -28,10 +29,11 @@ stages:
         instructions: 'Please approve or reject the deployment.'
         onTimeout: 'reject'
 
-- stage: GithubRelease
-  displayName: GitHub Release
-  jobs:
+# - stage: GithubRelease
+#   displayName: GitHub Release
+#   jobs:
   - job: release
+    displayName: Github release
     pool:
       vmImage: ubuntu-latest
     steps:
