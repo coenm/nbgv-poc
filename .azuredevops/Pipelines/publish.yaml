@@ -5,6 +5,7 @@ resources:
   pipelines:
   - pipeline: CI
     source: nbgv-poc.Build
+    trigger: true
     # trigger:
     #   tags:
     #   - auto-release
