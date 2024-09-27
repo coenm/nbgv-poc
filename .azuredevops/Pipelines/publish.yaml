@@ -24,7 +24,7 @@ stages:
         Write-Host "##vso[build.updatebuildnumber]$(resources.pipeline.CI.runName)"
       displayName: ⚙ Set up pipeline
 
-- stage: "Manual_Validation"
+- stage: ManualValidation
   displayName: "Manual Validation"
   jobs:
   - job: WaitForValidation
